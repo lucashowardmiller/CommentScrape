@@ -11,6 +11,7 @@ import re
 html_comments = re.compile("(?s)<!--.+?-->", re.DOTALL)
 
 # TODO regex adds
+# JS
 # PHP
 # CSS
 # More

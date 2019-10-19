@@ -1,14 +1,38 @@
 from comment_scrape import scrape_page
+import argparse
+import validators
 
 """Sample Driver for the Comment Scrape Library."""
 
 # This will be good at some point
 ascii_art = """Comment Scrape"""
 
+
+def save_to_file():
+    pass
+
+
 if __name__ == '__main__':
-    print("Only grabs comments for now.")
+    # Parse and set arguments
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("-q", "--quiet", help="Silences header art and row names",
+                        action="store_true")
+    parser.add_argument("-s", "--show-source", help="Shows the url source page for each comment",
+                        action="store_true")
+    parser.add_argument("-c", "--colors", help="Nice colors, what's not to love?",
+                        action="store_true")
+
+    args = parser.parse_args()
+
+    # Scraping logic
+    if not args.quiet:
+        print(ascii_art)
+        print("v0.01 Extremely limited version.")
+
     # add validation
-    # add spider functionality
+    # something like the following should work
+    # validators.url("http://google.com")
     entry = input("Enter a web page to scrape for comments: ")
     results = scrape_page.return_page_comments(entry)
     for result in results:

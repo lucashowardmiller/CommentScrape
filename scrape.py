@@ -13,7 +13,7 @@ def save_to_file():
 
 
 if __name__ == '__main__':
-    # Parse and set arguments
+    # Parse and set args
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-q", "--quiet", help="Silences header art and row names",

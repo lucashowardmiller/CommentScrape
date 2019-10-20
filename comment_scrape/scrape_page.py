@@ -10,15 +10,16 @@ import re
 # Filters out all HTML comment tags, even if they appear in page text
 html_comments = re.compile("(?s)<!--.+?-->", re.DOTALL)
 
-# TODO regex adds
-# JS
-# PHP
-# CSS
-# More
+# Should only be run on a css file or a <style></style> tag (If I ever go full XML)
+css_comments = re.compile(r'/\*.+?\*/', re.DOTALL)
+
+# Should only be run on a .js file or a <script></script> tag (If I ever go full XML)
+# ????
 
 
 def return_page_comments(url: str) -> List[str]:
     """Takes a url as an arg, and returns a list of all HTML comments matching the regex"""
+    # TODO only match on page text
     r = requests.get(url)
     return_comments = re.findall(html_comments, r.text)
     return return_comments

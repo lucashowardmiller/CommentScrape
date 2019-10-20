@@ -81,7 +81,7 @@ if __name__ == '__main__':
             else:
                 break
 
-    results = scrape_page.return_page_comments(entry)
+    results = scrape_page.get_html_comments(entry)
     wrap_print("Scraping Results:", color=Fore.CYAN, skip=True)
     for result in results:
         wrap_print(f'{result}', color=Fore.GREEN)

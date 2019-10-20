@@ -31,15 +31,12 @@ if __name__ == '__main__':
     # parser.add_argument("-r", "--rank-results", help="Returns the found comments, ranked by potential")
     # parser.add_argument("-o", "--out-file", help="Stores the results of operation in a text file")
 
-    # Init for Colorama terminal coloring
-    init()
-
     args = parser.parse_args()
 
     # Scraping logic
     if not args.quiet:
         print(ascii_art)
-        print(version_string+"\n")
+        print(version_string + "\n")
 
     while True:
         entry = input("Enter a web page to scrape for comments: ")
@@ -52,4 +49,5 @@ if __name__ == '__main__':
     results = scrape_page.return_page_comments(entry)
     for result in results:
         print(result)
+        
     pass

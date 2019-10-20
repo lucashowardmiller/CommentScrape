@@ -47,6 +47,9 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    # Windows printing support for Colorama
+    init()
+
     if args.target:
         if validators.url(args.target):
             entry = args.target

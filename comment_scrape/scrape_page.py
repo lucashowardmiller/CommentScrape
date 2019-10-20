@@ -1,30 +1,32 @@
+from bs4 import BeautifulSoup as bs
+from bs4 import Comment as comment
 from typing import List
-import bs4
 import requests
 import re
 
 """Scraping functions for finding HTML comments"""
 
-# A XML parser would be faster/better, but I'm not trying to blow up my tool with untrusted input
-# TODO see if bs4 works, it is tag aware?
+# Regex for CSS/JS Comments
+css_re = re.compile(r'/\*.+?\*/', re.DOTALL)
+js_re = re.compile(r'//*/', re.DOTALL)
 
-# Filters out all HTML comment tags, even if they appear in page text
-html_comments = re.compile("(?s)<!--.+?-->", re.DOTALL)
-
-# Should only be run on a css file or a <style></style> tag (If I ever go full XML)
-css_comments = re.compile(r'/\*.+?\*/', re.DOTALL)
-
-# Should only be run on a .js file or a <script></script> tag (If I ever go full XML)
-# ????
-
-
-def return_page_comments(url: str) -> List[str]:
-    """Takes a url as an arg, and returns a list of all HTML comments matching the regex"""
-    # TODO only match on page text
+def get_html_comments(url: str) -> List[str]:
+    """Takes a url as an arg, and returns a list of all HTML comments""" 
     r = requests.get(url)
-    return_comments = re.findall(html_comments, r.text)
-    return return_comments
+    soup = bs(r.text, 'html.parser')
+    comments = soup.find_all(string=lambda text: isinstance(text, comment))
+    # find JS and CSS comments by browsing tree
+    return comments
+    
+def get_css_comments(url: str) -> List[str]:
+    """Takes a url as an arg, and returns a list of all HTML comments""" 
+    r = requests.get(url)
+    comments = re.findall(css_re, r.text)
+    return comments
+    
+def get_js_comments(url: str) -> List[str]:
+    """Takes a url as an arg, and returns a list of all HTML comments""" 
+    r = requests.get(url)
+    comments = re.findall(js_re, r.text)
+    return comments
 
-
-if __name__ == '__main__':
-    print(return_page_comments("https://html.com/tags/comment-tag/"))

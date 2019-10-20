@@ -23,8 +23,7 @@ if __name__ == '__main__':
                         action="store_true")
     parser.add_argument("-s", "--show-source", help="Shows the url source page for each comment",
                         action="store_true")
-    # parser.add_argument("-c", "--color", help="Nice colors, what's not to love?",
-                        action="store_true")
+    # parser.add_argument("-c", "--color", help="Nice colors, what's not to love?",action="store_true")
     parser.add_argument("-t", "--target", help="Enter a target URL to start the scan")
     parser.add_argument("-i", "--interactive", help="Enter a target URL to start the scan")
 

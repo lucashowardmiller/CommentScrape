@@ -6,6 +6,7 @@ import re
 """Scraping functions for finding HTML comments"""
 
 # A XML parser would be faster/better, but I'm not trying to blow up my tool with untrusted input
+# TODO see if bs4 works, it is tag aware?
 
 # Filters out all HTML comment tags, even if they appear in page text
 html_comments = re.compile("(?s)<!--.+?-->", re.DOTALL)

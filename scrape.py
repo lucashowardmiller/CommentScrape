@@ -71,10 +71,11 @@ if __name__ == '__main__':
             else:
                 break
 
-    results = scrape_page.return_page_comments(entry)
+    results = scrape_page.get_html_comments(entry)
     for result in results:
         wrap_print(f'{result}', color="Fore.GREEN")
 
     # TODO Work out how to display findings, HI -> Low / By category of match?
 
     pass
+    

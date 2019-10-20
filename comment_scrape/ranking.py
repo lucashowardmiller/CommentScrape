@@ -59,5 +59,9 @@ def api_key_rank(comment: str) -> int:
     pass
 
 
+def uri_credentials_rank(comment: str) -> int:
+    pass
+
+
 if __name__ == '__main__':
     pass

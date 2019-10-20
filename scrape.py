@@ -23,9 +23,10 @@ if __name__ == '__main__':
                         action="store_true")
     parser.add_argument("-s", "--show-source", help="Shows the url source page for each comment",
                         action="store_true")
-    parser.add_argument("-c", "--color", help="Nice colors, what's not to love?",
+    # parser.add_argument("-c", "--color", help="Nice colors, what's not to love?",
                         action="store_true")
     parser.add_argument("-t", "--target", help="Enter a target URL to start the scan")
+    parser.add_argument("-i", "--interactive", help="Enter a target URL to start the scan")
 
     # Future Features
     # parser.add_argument("-r", "--rank-results", help="Returns the found comments, ranked by potential")
@@ -38,24 +39,13 @@ if __name__ == '__main__':
 
     # Scraping logic
     if not args.quiet:
-        if args.color:
-            print(f'{Fore.BLUE}{ascii_art}{Fore.RESET}')
-            print(f'{Fore.LIGHTBLUE_EX}{version_string}{Fore.RESET}\n')
-        else:
-            print(ascii_art)
-            print(version_string+"\n")
+        print(ascii_art)
+        print(version_string+"\n")
 
     while True:
-        if args.color:
-            entry = input(f'{Fore.BLUE}Enter a web page to scrape for comments: {Fore.RESET}')
-        else:
-            entry = input("Enter a web page to scrape for comments: ")
-
+        entry = input("Enter a web page to scrape for comments: ")
         if not validators.url(entry):
-            if args.color:
-                print(f'{Fore.RED}Error parsing URL. Try Again.{Fore.RESET}')
-            else:
-                print("Error parsing URL. Try Again.")
+            print("Error parsing URL. Try Again.")
             continue
         else:
             break

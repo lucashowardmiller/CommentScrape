@@ -6,6 +6,10 @@ from colorama import Fore, init
 
 """Sample Driver for the Comment Scrape Library."""
 
+# Global Args for file output / color
+
+USE_COLOR = False
+
 ascii_art = """<!--
  _____                                      _   _____                                
 /  __ \                                    | | /  ___|                               
@@ -17,14 +21,9 @@ ascii_art = """<!--
                                                                     |_|        -->"""
 
 
-def save_to_file(filename: str):
-    """Saves the results to a file (Formatted as text)"""
-    pass
-
-
-def wrap_print(print_string: str, color: str, color_bool: bool):
-    """Wraps the print function, will later be used for the store file"""
-    if color_bool:
+def wrap_print(print_string: str, color="Fore.WHITE"):
+    """Wraps the print function and adds colors, will later be used for everything"""
+    if USE_COLOR:
         # TODO fix eval, it's all trusted input. But still.
         print(f'{eval(color)}{print_string}{Fore.RESET}')
     else:
@@ -47,6 +46,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    USE_COLOR = args.color
+
     # Windows printing support for Colorama
     init()
 
@@ -54,25 +55,25 @@ if __name__ == '__main__':
         if validators.url(args.target):
             entry = args.target
         else:
-            wrap_print("Could not parse URL for -t/--target", "Fore.RED", args.color)
-            wrap_print("Exiting...", "Fore.RED", args.color)
+            wrap_print("Could not parse URL for -t/--target", color="Fore.RED")
+            wrap_print("Exiting...", color="Fore.RED")
             sys.exit(1)
 
     if not args.quiet:
-        wrap_print(f'{ascii_art}', "Fore.LIGHTCYAN_EX", args.color)
+        wrap_print(f'{ascii_art}', color="Fore.BLUE")
 
     if not args.target:
         while True:
             entry = input("Enter a web page to scrape for comments: ")
             if not validators.url(entry):
-                wrap_print("Error parsing URL. Try Again.", "Fore.RED", args.color)
+                wrap_print("Error parsing URL. Try Again.", color="Fore.RED")
                 continue
             else:
                 break
 
     results = scrape_page.return_page_comments(entry)
     for result in results:
-        wrap_print(f'{result}', "Fore.GREEN", args.color)
+        wrap_print(f'{result}', color="Fore.GREEN")
 
     # TODO Work out how to display findings, HI -> Low / By category of match?
 

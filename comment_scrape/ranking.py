@@ -11,6 +11,10 @@ keywords = ['usr', 'user', 'pass', 'admin', 'TODO', 'backup', 'api', 'key', 'sec
 keyword_regex = re.compile("(?=("+'|'.join(keywords)+r"))", re.IGNORECASE)
 
 
+def ingest_rank_and_pages():
+    pass
+
+
 def total_value(comment: str) -> int:
     """Wrapper function that returns the total int of all ranking methods"""
     ret = 0

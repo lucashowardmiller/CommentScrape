@@ -10,6 +10,13 @@ import re
 css_re = re.compile(r'/\*.+?\*/', re.DOTALL)
 js_re = re.compile(r'//*/', re.DOTALL)
 
+
+def get_html_comments_from_request(page_request) -> List[str]:
+    soup = bs(page_request.text, 'html.parser')
+    comments = soup.find_all(string=lambda text: isinstance(text, comment))
+    return comments
+
+
 def get_html_comments(url: str) -> List[str]:
     """Takes a url as an arg, and returns a list of all HTML comments""" 
     r = requests.get(url)
@@ -17,13 +24,15 @@ def get_html_comments(url: str) -> List[str]:
     comments = soup.find_all(string=lambda text: isinstance(text, comment))
     # find JS and CSS comments by browsing tree
     return comments
-    
+
+
 def get_css_comments(url: str) -> List[str]:
     """Takes a url as an arg, and returns a list of all HTML comments""" 
     r = requests.get(url)
     comments = re.findall(css_re, r.text)
     return comments
-    
+
+
 def get_js_comments(url: str) -> List[str]:
     """Takes a url as an arg, and returns a list of all HTML comments""" 
     r = requests.get(url)

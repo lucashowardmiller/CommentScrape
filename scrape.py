@@ -1,4 +1,6 @@
 from comment_scrape import scrape_page
+from comment_scrape.objects import WebPage
+from comment_scrape.spider import start_crawl
 import argparse
 import validators
 import sys
@@ -74,18 +76,22 @@ if __name__ == '__main__':
 
     if not args.target:
         while True:
-            entry = input("Enter a web page to scrape for comments: ")
+            entry = input("Enter a web site to scrape for comments: ")
             if not validators.url(entry):
                 wrap_print("Error parsing URL. Try Again.", color=Fore.RED)
                 continue
             else:
                 break
 
-    results = scrape_page.get_html_comments(entry)
     wrap_print("Scraping Results:", color=Fore.CYAN, skip=True)
-    for result in results:
-        wrap_print(f'{result}', color=Fore.GREEN)
 
+    pages = start_crawl(entry)
+
+    for webpage in pages:
+        for comment in webpage.html_comments:
+            print(comment)
+
+    print("done with parsing")
     # TODO Work out how to display findings, HI -> Low / By category of match?
 
     # Cleanup

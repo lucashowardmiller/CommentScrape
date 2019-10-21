@@ -9,5 +9,7 @@ python3 ./scrape_page.py -c -t "https://543hn.com"
 ```
 
 Requirements:
+- requests (requests)
 - beautiful soup (bs4)
 - validators (validators)
+- colorama (colorama)

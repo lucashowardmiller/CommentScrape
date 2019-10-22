@@ -37,7 +37,8 @@ class Comment:
         self.comment_text = comment
         self.predicted_value = 0
         self.source_url = source
-        pass
+        self.all_urls = []
+        self.duplicates = 0
 
 
 if __name__ == '__main__':

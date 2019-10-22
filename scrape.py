@@ -1,5 +1,6 @@
 from comment_scrape import scrape_page
 from comment_scrape.objects import WebPage
+from comment_scrape.ranking import ingest_pages_and_rank
 from comment_scrape.spider import start_crawl
 import argparse
 import validators
@@ -22,7 +23,7 @@ ascii_art = """<!--
 | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|`--. \/ __| '__/ _` | '_ \ / _ \ '__|
 | \__/\ (_) | | | | | | | | | | |  __/ | | | |_/\__/ / (__| | | (_| | |_) |  __/ |   
  \____/\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__\____/ \___|_|  \__,_| .__/ \___|_|   
- v0.01 An extremely limited version.                                | |              
+ v0.02 An extremely limited version.                                | |              
                                                                     |_|        -->"""
 
 
@@ -46,11 +47,7 @@ if __name__ == '__main__':
     parser.add_argument("-t", "--target", help="Enter a target URL to start the scan")
     parser.add_argument("-c", "--color", help="Nice colors, what's not to love?", action="store_true")
     parser.add_argument("-o", "--out", help="Stores the results of operation in a text file")
-
-    # Future Features
-    # parser.add_argument("-r", "--rank-results", help="Returns the found comments, ranked by potential")
-    # parser.add_argument("-s", "--show-source", help="Shows the url source page for each comment", action="store_true")
-    # parser.add_argument("-i", "--interactive", help="Interactive mode")
+    parser.add_argument("-m", "--max", help="Maximum number of pages to crawl. Default 1000")
 
     args = parser.parse_args()
 
@@ -83,16 +80,23 @@ if __name__ == '__main__':
             else:
                 break
 
-    wrap_print("Scraping Results:", color=Fore.CYAN, skip=True)
-
     pages = start_crawl(entry)
 
-    for webpage in pages:
-        for comment in webpage.html_comments:
-            print(comment)
+    wrap_print("Done with scraping", skip=True)
 
-    print("done with parsing")
-    # TODO Work out how to display findings, HI -> Low / By category of match?
+    wrap_print("Scraping Results:", color=Fore.CYAN, skip=True)
+
+    sorted_comments = ingest_pages_and_rank(pages)
+    for ranked_comment in sorted_comments:
+        if ranked_comment.predicted_value > 10:
+            ccolor = Fore.GREEN
+        elif ranked_comment.predicted_value > 5:
+            ccolor = Fore.LIGHTGREEN_EX
+        else:
+            ccolor = Fore.LIGHTYELLOW_EX
+
+        wrap_print(f'|{int(ranked_comment.predicted_value)}|{ranked_comment.comment_text}| {ranked_comment.source_url} |', color=ccolor)
+
 
     # Cleanup
     if SAVE_TO_FILE:

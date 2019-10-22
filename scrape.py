@@ -48,8 +48,9 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--useragent", help="Set a custom user agent. Uses \"CommentScrape\" by default", default="CommentScrape")
     parser.add_argument("-s", "--spoof", help="Sets a browser user agent. In the future, behavior.", action="store_true")
     parser.add_argument("-i", "--showie", help="Shows IE compatibility tags, hidden by default", action="store_false", default=True)
-    parser.add_argument("-m", "--max", help="Maximum number of pages to crawl. Default 1000", type=int, default=1000)
+    parser.add_argument("-m", "--max", help="Maximum number of pages to crawl. Default 500", type=int, default=500)
     parser.add_argument("-r", "--rps", help="Max number of Requests Per Second", type=int, default=10)
+    parser.add_argument("-p", "--progress", help="Adds a progress report every ten percent", action="store_true", default=False)
 
     # Future Functionality
     # parser.add_argument("-e", "--extra", help="Extra! Tests for things still being worked on, won't have nice output", action="store_true")
@@ -81,6 +82,7 @@ if __name__ == '__main__':
     USE_COLOR = args.color
     QUIET = args.quiet
     USERAGENT = args.useragent
+    PROGRESS_BAR = args.progress
 
     # Windows printing support for Colorama
     init()
@@ -106,7 +108,7 @@ if __name__ == '__main__':
 
     wrap_print(f'Starting with {entry}', skip=True)
 
-    pages = start_crawl(entry, user_agent=USERAGENT, max_crawl=TOTAL_MAX_REQUESTS, max_rps=MAX_RPS)
+    pages = start_crawl(entry, user_agent=USERAGENT, max_crawl=TOTAL_MAX_REQUESTS, max_rps=MAX_RPS, print_progress=PROGRESS_BAR)
 
     wrap_print(f'Done with scraping: {extract_base_domain(entry)}', skip=True)
 

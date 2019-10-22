@@ -25,7 +25,7 @@ def start_crawl(base_url: str, max_rps=999, max_crawl=1000, obey_robots=False, u
 
     while crawl.total_scraped < max_crawl and len(crawl.pages_to_crawl) > 0:
         # Creates a new WebPage
-        current_page = WebPage(crawl.get_next_pag())
+        current_page = WebPage(crawl.get_next_page())
         crawl.scraped_urls.add(current_page.url)
 
         r = requests.get(current_page.url, headers=headers)

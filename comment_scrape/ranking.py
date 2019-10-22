@@ -1,8 +1,8 @@
-import re
-import collections
-import math
-import base64
 from comment_scrape.objects import WebPage, Comment
+import collections
+import base64
+import math
+import re
 
 """Functions that take in an input, and return an approximation of how neat it might be"""
 
@@ -15,6 +15,7 @@ keyword_regex = re.compile("(?=("+'|'.join(keywords)+r"))", re.IGNORECASE)
 def ingest_pages_and_rank(pages, block_ie=True):
     """Takes a list of pages, and returns a list of comments de duped and sorted by predicted value"""
     comments = []
+    
     for webpage in pages:
         for comment_value in webpage.html_comments:
             tmp_comment = Comment(comment_value, webpage.url)
@@ -28,6 +29,17 @@ def ingest_pages_and_rank(pages, block_ie=True):
                     check_if_dup.all_urls.append(tmp_comment.source_url)
                 else:
                     comments.append(tmp_comment)
+                    
+        # ADD IF STATEMENT/ REDUCE REDUNDNACY
+        for comment_value in webpage.css_comments:
+            tmp_comment = Comment(comment_value, webpage.url)
+            tmp_comment.predicted_value = total_value(tmp_comment.comment_text)
+            # Find if and what other comment has the same text
+            check_if_dup = next((x for x in comments if x.comment_text == tmp_comment.comment_text), None)
+            if check_if_dup is not None:
+                check_if_dup.all_urls.append(tmp_comment.source_url)
+            else:
+                comments.append(tmp_comment)
 
     comments.sort(key=lambda x: x.predicted_value, reverse=True)
     return comments
@@ -44,10 +56,11 @@ def total_value(comment: str) -> int:
 
 def shannon_entropy_rank(comment: str) -> int:
     """Returns an int 0-10+, of how random a string is. Designed to find api keys and randomly generated strings"""
+    
     # Original code stolen from https://stackoverflow.com/a/47348423, thanks.
     probabilities = [n_x / len(comment) for x, n_x in collections.Counter(comment).items()]
     e_x = [-p_x * math.log(p_x, 2) for p_x in probabilities]
-    # Shannon works better on longer strings, x2 is to make the number bigger (therefor better)
+    # Shannon works better on longer strings, x2 is to make the number bigger (therefore better)
     return sum(e_x)
 
 
@@ -77,6 +90,7 @@ def encoding_rank(comment: str) -> int:
 
 def api_key_rank(comment: str) -> int:
     """Returns an int 0-10+, Will match a regex to common api keys"""
+    
     # TODO Implement, get key re's and compile
     # Shannon picks up most weird stuff already
     pass

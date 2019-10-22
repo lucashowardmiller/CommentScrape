@@ -8,7 +8,7 @@ __Example Run__:
 $ python3 ./scrape.py -Cc "https://543hn.com"
 ```
 
-![1571771681236](/home/shane/Desktop/CommentScrape/screenshots/example_run.png)
+![1571771681236](![Example Run](screenshots/example_run.png)
 
 Requirements:
 

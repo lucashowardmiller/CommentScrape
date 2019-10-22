@@ -13,7 +13,7 @@ def start_crawl(base_url: str, max_rps=999, max_crawl=1000, obey_robots=False, u
     crawl = ScrapingOperation(base_url)
     crawl.domain = extract_base_domain(base_url)
 
-    delay_after_crawl = 1 / max_crawl
+    delay_after_crawl = 1 / max_rps
 
     # Set the crawler to use the base url as the start
     crawl.pages_to_crawl.add(base_url)

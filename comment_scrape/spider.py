@@ -4,13 +4,16 @@ from comment_scrape.objects import ScrapingOperation, WebPage
 from urllib.parse import urlsplit
 from comment_scrape.scrape_page import get_html_comments_from_request
 from bs4 import BeautifulSoup as bs
+import time
 """Enumeration commands and samples"""
 
 
-def start_crawl(base_url: str, max_rps=99999, max_crawl=1000, obey_robots=False, user_agent="CommentScrape"):
+def start_crawl(base_url: str, max_rps=999, max_crawl=1000, obey_robots=False, user_agent="CommentScrape"):
     # Set up the crawler
     crawl = ScrapingOperation(base_url)
     crawl.domain = extract_base_domain(base_url)
+
+    delay_after_crawl = 1 / max_crawl
 
     # Set the crawler to use the base url as the start
     crawl.pages_to_crawl.add(base_url)
@@ -34,6 +37,8 @@ def start_crawl(base_url: str, max_rps=99999, max_crawl=1000, obey_robots=False,
                     crawl.pages_to_crawl.add(link)
         crawl.total_scraped += 1
         crawl.scraped_pages_obj.append(current_page)
+        # TODO find way to factor in time for requests, will help with queues later
+        time.sleep(delay_after_crawl)
     return crawl.scraped_pages_obj
 
 

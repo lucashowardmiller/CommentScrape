@@ -21,7 +21,7 @@ ascii_art = """<!--
 | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|`--. \/ __| '__/ _` | '_ \ / _ \ '__|
 | \__/\ (_) | | | | | | | | | | |  __/ | | | |_/\__/ / (__| | | (_| | |_) |  __/ |   
  \____/\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__\____/ \___|_|  \__,_| .__/ \___|_|   
- v0.90 A limited version.                                           | |              
+ v1.00 It mostly works!                                             | |              
                                                                     |_|        -->"""
 
 
@@ -49,9 +49,9 @@ if __name__ == '__main__':
     parser.add_argument("-s", "--spoof", help="Sets a browser user agent. In the future, behavior.", action="store_true")
     parser.add_argument("-i", "--showie", help="Shows IE compatibility tags, hidden by default", action="store_false", default=True)
     parser.add_argument("-m", "--max", help="Maximum number of pages to crawl. Default 1000", type=int, default=1000)
+    parser.add_argument("-r", "--rps", help="Max number of Requests Per Second", type=int, default=10)
 
     # Future Functionality
-    parser.add_argument("-r", "--rps", help="Max number of Requests Per Second", type=int, default=99999999)
     # parser.add_argument("-e", "--extra", help="Extra! Tests for things still being worked on, won't have nice output", action="store_true")
     # parser.add_argument("-f", "--file", help="Load a list of URLs from a file, one per line")
     # parser.add_argument("-c", "--css", help="Show CSS Comments from <style> tags in visited pages")
@@ -69,6 +69,12 @@ if __name__ == '__main__':
                           "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0",
                           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36"]
         USERAGENT = random.choice(browser_agents)
+
+    if args.rps > 0:
+        MAX_RPS = args.rps
+    else:
+        wrap_print("-/--rps Must be greater than 0.", color=Fore.RED)
+        sys.exit(1)
 
     TOTAL_MAX_REQUESTS = args.max
     MAX_RPS = args.rps

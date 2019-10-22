@@ -4,38 +4,24 @@ from typing import List
 import requests
 import re
 
-"""Scraping functions for finding HTML comments"""
+"""Scraping functions for finding comments"""
 
 # Regex for CSS/JS Comments
 css_re = re.compile(r'/\*.+?\*/', re.DOTALL)
 js_re = re.compile(r'//*/', re.DOTALL)
 
-
-def get_html_comments_from_request(page_request) -> List[str]:
-    soup = bs(page_request.text, 'html.parser')
-    comments = soup.find_all(string=lambda text: isinstance(text, comment))
-    return comments
-
-
-def get_html_comments(url: str) -> List[str]:
-    """Takes a url as an arg, and returns a list of all HTML comments""" 
-    r = requests.get(url)
+def get_html_comments(r) -> List[str]:
+    """Get HTML comments from a request object"""
     soup = bs(r.text, 'html.parser')
     comments = soup.find_all(string=lambda text: isinstance(text, comment))
-    # find JS and CSS comments by browsing tree
     return comments
 
+def get_css_comments(r) -> List[str]:
+    """Get CSS comments from a request object"""
+    return re.findall(css_re, r.text)
 
-def get_css_comments(url: str) -> List[str]:
-    """Takes a url as an arg, and returns a list of all HTML comments""" 
-    r = requests.get(url)
-    comments = re.findall(css_re, r.text)
-    return comments
-
-
-def get_js_comments(url: str) -> List[str]:
-    """Takes a url as an arg, and returns a list of all HTML comments""" 
-    r = requests.get(url)
-    comments = re.findall(js_re, r.text)
-    return comments
+def get_js_comments(r) -> List[str]:
+    """Get JS comments from a request object"""
+    return re.findall(js_re, r.text)
+    
 

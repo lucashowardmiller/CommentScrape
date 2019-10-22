@@ -12,19 +12,22 @@ keywords = ['usr', 'user', 'pass', 'admin', 'TODO', 'backup', 'api', 'key', 'sec
 keyword_regex = re.compile("(?=("+'|'.join(keywords)+r"))", re.IGNORECASE)
 
 
-def ingest_pages_and_rank(pages):
+def ingest_pages_and_rank(pages, block_ie=True):
     """Takes a list of pages, and returns a list of comments de duped and sorted by predicted value"""
     comments = []
     for webpage in pages:
         for comment_value in webpage.html_comments:
             tmp_comment = Comment(comment_value, webpage.url)
             tmp_comment.predicted_value = total_value(tmp_comment.comment_text)
-            # Find if and what other comment has the same text
-            check_if_dup = next((x for x in comments if x.comment_text == tmp_comment.comment_text), None)
-            if check_if_dup is not None:
-                check_if_dup.all_urls.append(tmp_comment.source_url)
+            if block_ie and "IE" in tmp_comment.comment_text:
+                pass
             else:
-                comments.append(tmp_comment)
+                # Find if and what other comment has the same text
+                check_if_dup = next((x for x in comments if x.comment_text == tmp_comment.comment_text), None)
+                if check_if_dup is not None:
+                    check_if_dup.all_urls.append(tmp_comment.source_url)
+                else:
+                    comments.append(tmp_comment)
 
     comments.sort(key=lambda x: x.predicted_value, reverse=True)
     return comments
@@ -67,7 +70,7 @@ def encoding_rank(comment: str) -> int:
     # Can add more encodings, not sure of the benefits / runtime
     try:
         trash = base64.b64decode(comment).decode("utf-8")
-        return 10
+        return 25
     except:
         return 0
 
@@ -75,6 +78,7 @@ def encoding_rank(comment: str) -> int:
 def api_key_rank(comment: str) -> int:
     """Returns an int 0-10+, Will match a regex to common api keys"""
     # TODO Implement, get key re's and compile
+    # Shannon picks up most weird stuff already
     pass
 
 

@@ -16,8 +16,8 @@ class WebPage:
 class ScrapingOperation:
     def get_next_page(self):
         ret = self.pages_to_crawl.pop()
-        while ret in self.scraped_urls:
-            ret = self.pages_to_crawl.pop()
+        #while ret in self.scraped_urls:
+            #ret = self.pages_to_crawl.pop()
         return ret
 
     def __init__(self, domain: str, max_depth=5, max_crawl=100, obey_robots=False):

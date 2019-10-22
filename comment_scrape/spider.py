@@ -6,12 +6,8 @@ from comment_scrape.scrape_page import get_html_comments_from_request
 from bs4 import BeautifulSoup as bs
 """Enumeration commands and samples"""
 
-# TODO add and queue
-# Support rate limiting and such
-# Support UA spoofing
 
-
-def start_crawl(base_url: str, max_depth=5, max_crawl=100, obey_robots=False):
+def start_crawl(base_url: str, max_rps=99999, max_crawl=1000, obey_robots=False, user_agent="CommentScrape"):
     # Set up the crawler
     crawl = ScrapingOperation(base_url)
     crawl.domain = extract_base_domain(base_url)
@@ -19,12 +15,17 @@ def start_crawl(base_url: str, max_depth=5, max_crawl=100, obey_robots=False):
     # Set the crawler to use the base url as the start
     crawl.pages_to_crawl.add(base_url)
 
+    # Set up requests headers
+    headers = {
+        'User-Agent': user_agent
+    }
+
     while crawl.total_scraped < max_crawl and len(crawl.pages_to_crawl) > 0:
         # Creates a new WebPage
         current_page = WebPage(crawl.get_next_page())
         crawl.scraped_urls.add(current_page.url)
 
-        r = requests.get(current_page.url)
+        r = requests.get(current_page.url, headers=headers)
         current_page.html_comments = get_html_comments_from_request(r)
         for link in extract_links(r):
             # Check for scope

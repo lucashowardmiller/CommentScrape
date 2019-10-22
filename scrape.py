@@ -21,7 +21,7 @@ ascii_art = """<!--
 | \__/\ (_) | | | | | | | | | | |  __/ | | | |_/\__/ / (__| | | (_| | |_) |  __/ |   
  \____/\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__\____/ \___|_|  \__,_| .__/ \___|_|   
  v1.00 It mostly works!                                             | |              
-                                                                    |_|        -->"""
+ https://github.com/lucashowardmiller/CommentScrape                 |_|        -->"""
 
 
 def wrap_print(print_string, color=Fore.WHITE, skip=False):
@@ -41,7 +41,7 @@ if __name__ == '__main__':
         description='Crawls a page/site and returns important HTML comments.')
     parser.add_argument(
         "target",
-        metavar="TARGET",  
+        metavar="TARGET URL",
         nargs='+',
         type=str,
         help="enter a target URL to start the scan")
@@ -73,6 +73,12 @@ if __name__ == '__main__':
         help="shows IE compatibility tags, hidden by default",
         action="store_false",
         default=True)
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        help="shows IE compatibility tags, hidden by default",
+        action="store_true",
+        default=False)
     parser.add_argument(
         "-m",
         "--max",
@@ -125,6 +131,7 @@ if __name__ == '__main__':
     QUIET = args.quiet
     TARGET = args.target[0]
     CSS = args.css
+    VERBOSE = args.verbose
     JS = False # future implementation
 
     if validators.url(TARGET):
@@ -143,9 +150,10 @@ if __name__ == '__main__':
         max_crawl=TOTAL_MAX_REQUESTS,
         max_rps=MAX_RPS,
         css=CSS,
-        js=JS)
+        js=JS,
+        verbose=VERBOSE)
 
-    wrap_print(f'[+] Done with scraping: {TARGET}', skip=True)
+    wrap_print(f'[+] Done with scraping: {TARGET}', skip=True, color=Fore.CYAN)
 
     # Rank and display returned comments
     sorted_comments = ingest_pages_and_rank(pages, block_ie=args.showie)
@@ -161,9 +169,9 @@ if __name__ == '__main__':
                 ccolor = Fore.LIGHTYELLOW_EX
 
             if len(ranked_comment.all_urls) == 0:
-                wrap_print(f'\t{ranked_comment.comment_text}\n\t\t(score {int(ranked_comment.predicted_value)} from {ranked_comment.source_url})\n', color=ccolor)
+                wrap_print(f'|{int(ranked_comment.predicted_value)}|{ranked_comment.comment_text}| {ranked_comment.source_url} ||', color=ccolor)
             else:
-                wrap_print(f'\t{ranked_comment.comment_text}\n\t\t(score {int(ranked_comment.predicted_value)}from {ranked_comment.source_url})\n\t\t(found on {len(ranked_comment.all_urls) - 1} other pages)\n', color=ccolor)
+                wrap_print(f'|{int(ranked_comment.predicted_value)}|{ranked_comment.comment_text}| {ranked_comment.source_url} | Found on {len(ranked_comment.all_urls) - 1} other pages. |', color=ccolor)
     else:
         wrap_print("Nothing found :(", skip=True, color=Fore.LIGHTRED_EX)
 

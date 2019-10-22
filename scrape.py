@@ -21,7 +21,7 @@ ascii_art = """<!--
 | \__/\ (_) | | | | | | | | | | |  __/ | | | |_/\__/ / (__| | | (_| | |_) |  __/ |   
  \____/\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__\____/ \___|_|  \__,_| .__/ \___|_|   
  v1.00 It mostly works!                                             | |              
- https://github.com/lucashowardmiller/CommentScrape                 |_|        -->"""
+ https://github.com/lucashowardmiller/CommentScrape                 |_|        -->\n"""
 
 
 def wrap_print(print_string, color=Fore.WHITE, skip=False):
@@ -44,51 +44,57 @@ if __name__ == '__main__':
         metavar="TARGET URL",
         nargs='+',
         type=str,
-        help="enter a target URL to start the scan")
+        help="Enter a target URL to start the scan")
     parser.add_argument(
         "-q",
         "--quiet",
-        help="silences header art and row names",
+        help="Silences header art and row names",
         action="store_true")
     parser.add_argument(
         "-c",
         "--css",
-        help="show CSS Comments from <style> tags in visited pages",
+        help="Show CSS Comments from <style> tags in visited pages",
         action="store_true",
         default=False)
     parser.add_argument(
         "-C",
         "--color",
-        help="nice colors, what's not to love?",
+        help="Nice colors, what's not to love?",
         action="store_true")
     parser.add_argument(
-        "-o", "--out", help="stores the results in a text file")
+        "-o", "--out", help="Stores the results in a text file")
     parser.add_argument(
         "-u",
         "--ua",
-        help="set a custom user agent. spoofs random by default")
+        help="Sets a custom user agent.")
+    parser.add_argument(
+        "-s",
+        "--spoof",
+        help="Use a random browser user agent",
+        action="store_true",
+        default=False)
     parser.add_argument(
         "-i",
         "--showie",
-        help="shows IE compatibility tags, hidden by default",
+        help="Shows IE compatibility tags, hidden by default",
         action="store_false",
         default=True)
     parser.add_argument(
         "-v",
         "--verbose",
-        help="shows IE compatibility tags, hidden by default",
+        help="Shows additional messages",
         action="store_true",
         default=False)
     parser.add_argument(
         "-m",
         "--max",
-        help="maximum number of pages to crawl (default 500)",
+        help="Maximum number of pages to crawl (default 500)",
         type=int,
         default=500)
     parser.add_argument(
         "-r",
         "--rps",
-        help="maximum requests per second (default 10)",
+        help="Maximum requests per second (default 10)",
         type=int,
         default=10)
 
@@ -109,15 +115,15 @@ if __name__ == '__main__':
         SAVE_TO_FILE = True
         FILE_REFERENCE = open(args.out, "w+")
 
-    if not args.ua:
+    USERAGENT ="CommentScrape"
+
+    if args.spoof:
         browser_agents = [
             "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0",
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36"
         ]
         USERAGENT = random.choice(browser_agents)
-    else:
-        USERAGENT = args.ua
 
     if args.rps > 0:
         MAX_RPS = args.rps

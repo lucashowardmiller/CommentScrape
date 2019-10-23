@@ -62,9 +62,10 @@ def extract_base_domain(url: str) -> str:
 
 
 def check_scope(url: str, domain) -> str:
-    # DONT ACCEPT HASHTAGS
-    # BUG TODO MAKE HTTP AND HTTPS DIFFERENCES IN URL WORK
+    # BUG TODO make http and https match
     """Checks that link is within scope"""
+    if url == "#":
+        return False
     base_url = extract_base_domain(url)
     scheme = "{0.scheme}".format(urlsplit(url))
     return base_url == domain or not scheme
